@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE connector PUBLIC '-//Sun Microsystems, Inc.//DTD Connector 1.0//EN' 'http://java.sun.com/dtd/connector_1_0.dtd'>
+<!-- <?xml version="1.0" encoding="UTF-8"?>
+<connector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/connector_1_6.xsd" id="Connector_ID" version="1.6">
+  <description></description>
+  <display-name>YuktixSocketJcaAdapter</display-name>
+  <vendor-name></vendor-name>
+  <eis-type></eis-type>
+  <resourceadapter-version></resourceadapter-version> -->
+<connector>
+    <display-name>YuktixSocketConnector</display-name>
+    <description>YuktixSocketConnector</description>
+    <vendor-name>Yuktix</vendor-name>
+    <spec-version>1.0</spec-version>
+    <eis-type>yuktixsocket</eis-type>
+    <version>1.0</version>
+  <resourceadapter>
+  		<managedconnectionfactory-class>com.yuktix.jca.YuktixManagedConnectionFactory</managedconnectionfactory-class>
+        <connectionfactory-interface>com.yuktix.interfaces.YuktixSocketConnectionFactory</connectionfactory-interface>
+        <connectionfactory-impl-class>com.yuktix.jca.YuktixConnectionFactoryImpl</connectionfactory-impl-class>
+        <connection-interface>com.yuktix.interfaces.YuktixSocketConnection</connection-interface>
+        <connection-impl-class>com.yuktix.jca.YuktixSocketConnectionImpl</connection-impl-class>
+        <transaction-support>NoTransaction</transaction-support>
+        <!-- <authentication-mechanism>
+            <authentication-mechanism-type>BasicPassword</authentication-mechanism-type>
+            <credential-interface>javax.resource.spi.security.PasswordCredential</credential-interface>
+        </authentication-mechanism> -->
+        <reauthentication-support>false</reauthentication-support>
+  </resourceadapter>
+</connector>
