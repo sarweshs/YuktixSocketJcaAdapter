@@ -14,7 +14,7 @@ public class TCPServer {
 
 		boolean listening = true;
         
-        try (ServerSocket serverSocket = new ServerSocket(4242)) { 
+        try (ServerSocket serverSocket = new ServerSocket(9999)) { 
             while (listening) {
 	            new MutiClientThread(serverSocket.accept()).start();
 	        }
