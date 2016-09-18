@@ -87,6 +87,7 @@ public class YuktixManagedConnection implements javax.resource.spi.ManagedConnec
      */
     @Override
     public void cleanup() throws ResourceException {
+    	LOG.info("Cleaning the connection now");
         ((YuktixSocketConnectionImpl) this.connection).close();
     }
 
