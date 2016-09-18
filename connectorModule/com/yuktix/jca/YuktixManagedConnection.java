@@ -176,7 +176,7 @@ public class YuktixManagedConnection implements javax.resource.spi.ManagedConnec
      *
      * @param handle
      */
-    public void closeHandle(YuktixSocketConnectionImpl handle) {
+    public void closeHandle(YuktixSocketConnectionImpl handle ) {
         try {
             ConnectionEvent event = new ConnectionEvent(this, ConnectionEvent.CONNECTION_CLOSED);
             event.setConnectionHandle(handle);
@@ -189,5 +189,24 @@ public class YuktixManagedConnection implements javax.resource.spi.ManagedConnec
             LOG.error("Error while closing connection", ex);
         }
     }
+    
+    /**
+    *
+    * @param handle
+    */
+   public void errorHandle(YuktixSocketConnectionImpl handle ) {
+       try {
+    	   LOG.error("Connection to be removed due to error");
+           ConnectionEvent event = new ConnectionEvent(this, ConnectionEvent.CONNECTION_ERROR_OCCURRED);
+           event.setConnectionHandle(handle);
+           for (ConnectionEventListener cel : listeners) {
+               cel.connectionErrorOccurred(event);
+           }
+       } catch (Exception ex) {
+           LOG.error(ex.getMessage());
+           ex.printStackTrace(System.err);
+           LOG.error("Error while closing connection", ex);
+       }
+   }
 
 }

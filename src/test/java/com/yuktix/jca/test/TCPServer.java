@@ -43,7 +43,7 @@ class MutiClientThread extends Thread {
                     socket.getInputStream()));
         ) {
             String inputLine, outputLine;
-            outputLine = "Response from server";
+            outputLine = "USING Response from server";
             out.println(outputLine);
 
             while (true) {
@@ -52,7 +52,7 @@ class MutiClientThread extends Thread {
             	{
             		System.out.println("Client says:" + inputLine);
             		outputLine =inputLine.toUpperCase();
-            		outputLine = outputLine + "\r\n";
+            		outputLine = "USING " + outputLine + "\r\n";
             		out.println(outputLine);
             	}
             	continue;

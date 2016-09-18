@@ -1,15 +1,14 @@
 package com.yuktix.jca;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
 
 import com.yuktix.interfaces.YuktixSocketConnection;
+import com.yuktix.rest.queue.BeanstalkException;
+import com.yuktix.rest.queue.BeanstalkSocket;
 
 public class YuktixSocketConnectionImpl implements YuktixSocketConnection {
 
@@ -27,8 +26,9 @@ public class YuktixSocketConnectionImpl implements YuktixSocketConnection {
 	 * ManagedConnectionFactory
 	 */
 	private final YuktixManagedConnectionFactory mcf;
-	Socket socket = null;
+	private Socket socket = null;
 	private Integer connectionId = 0;
+	private BeanstalkSocket beanstalkSocket;
 
 	/**
 	 *
@@ -36,9 +36,6 @@ public class YuktixSocketConnectionImpl implements YuktixSocketConnection {
 	 * @param mcf
 	 */
 	public YuktixSocketConnectionImpl(YuktixManagedConnection mc, YuktixManagedConnectionFactory mcf) {
-		// super(mcf.getHostname(), mcf.getPort(), mcf.isUseBlockingIO());
-		// this.setUniqueConnectionPerThread(mcf.isUseUniqueConnectionPerThread());
-
 		this.mc = mc;
 		this.mcf = mcf;
 		Random r = new Random();
@@ -57,10 +54,11 @@ public class YuktixSocketConnectionImpl implements YuktixSocketConnection {
 		}
 		try {
 			socket = new Socket(host, port);
-			System.out.println("Socket opened:" + socket);
-		} catch (IOException e) {
+			this.beanstalkSocket = new BeanstalkSocket(socket);
+			LOG.info("Socket opened:" + socket);
+		} catch (IOException | BeanstalkException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Error creating managed connection:" + e.getMessage());
 		}
 	}
 
@@ -68,9 +66,19 @@ public class YuktixSocketConnectionImpl implements YuktixSocketConnection {
 	public void close() {
 		try {
 			mc.closeHandle(this);
-			System.out.println("Returning to the pool:" + this.socket);
+			LOG.info("Returning to the pool:" + this.socket);
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage());
+		}
+	}
+	
+	@Override
+	public void destroy() {
+		try {
+			mc.errorHandle(this);
+			LOG.info("Evicting from pool:" + this.socket);
+		} catch (Exception ex) {
+			LOG.error(ex.getMessage());
 		}
 	}
 
@@ -106,6 +114,11 @@ public class YuktixSocketConnectionImpl implements YuktixSocketConnection {
 	@Override
 	public void setManagedConnection(Object c) {
 		this.mc = (YuktixManagedConnection) c;
+	}
+
+	@Override
+	public BeanstalkSocket getBeanstalkSocket() {
+		return this.beanstalkSocket;
 	}
 
 }

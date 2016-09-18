@@ -1,6 +1,7 @@
 package com.yuktix.jca;
 
 import java.io.PrintWriter;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -12,11 +13,12 @@ import javax.resource.spi.ManagedConnection;
 import javax.resource.spi.ManagedConnectionFactory;
 import javax.resource.spi.ResourceAdapter;
 import javax.resource.spi.ResourceAdapterAssociation;
+import javax.resource.spi.ValidatingManagedConnectionFactory;
 import javax.security.auth.Subject;
 
 import org.apache.log4j.Logger;
 
-public class YuktixManagedConnectionFactory implements ManagedConnectionFactory, ResourceAdapterAssociation {
+public class YuktixManagedConnectionFactory implements ManagedConnectionFactory, ResourceAdapterAssociation,ValidatingManagedConnectionFactory  {
 
     private static final long serialVersionUID = 1L;
 
@@ -279,5 +281,21 @@ public class YuktixManagedConnectionFactory implements ManagedConnectionFactory,
     public void setUseUniqueConnectionPerThread(Boolean useUniqueConnectionPerThread) {
         this.useUniqueConnectionPerThread = useUniqueConnectionPerThread;
     }
+
+	@Override
+	public Set getInvalidConnections(Set connectionSet) throws ResourceException {
+		Set<ManagedConnection> set = new HashSet<>();
+		/*ManagedConnection managedConnection = null;
+        Iterator it = connectionSet.iterator();
+        while (managedConnection == null && it.hasNext()) {
+            ManagedConnection mc = (ManagedConnection) it.next();
+            if (mc instanceof YuktixManagedConnection) {
+                YuktixManagedConnection hwmc = (YuktixManagedConnection) mc;
+                managedConnection = hwmc;
+                set.add(hwmc);
+            }
+        }*/
+        return set;
+	}
 
 }

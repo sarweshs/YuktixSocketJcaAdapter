@@ -1,7 +1,10 @@
 package com.yuktix.interfaces;
 
 import java.net.Socket;
+
 import javax.ejb.Local;
+
+import com.yuktix.rest.queue.BeanstalkSocket;
 
 
 @Local
@@ -38,5 +41,9 @@ public interface YuktixSocketConnection extends AutoCloseable {
      * @param c
      */
     public void setManagedConnection(Object c);
+    
+    public BeanstalkSocket getBeanstalkSocket();
+    
+    public void destroy();
 
 }

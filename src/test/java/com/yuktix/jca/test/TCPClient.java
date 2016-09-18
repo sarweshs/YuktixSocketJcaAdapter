@@ -10,24 +10,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.yuktix.rest.queue.BeanstalkSocket;
+
 public class TCPClient {
 	public static void main(String argv[]) throws Exception {
 		String hostName = "localhost";
-		int portNumber = 4242;
+		int portNumber = 9999;
 		List<ClientNioSocket> list = new ArrayList<>();
 		list.add(new ClientNioSocket(hostName, portNumber,1));
-		list.add(new ClientNioSocket(hostName, portNumber,2));
+		/*list.add(new ClientNioSocket(hostName, portNumber,2));
 		list.add(new ClientNioSocket(hostName, portNumber,3));
 		list.add(new ClientNioSocket(hostName, portNumber,4));
-		list.add(new ClientNioSocket(hostName, portNumber,5));
+		list.add(new ClientNioSocket(hostName, portNumber,5));*/
 		int x = 0;
-		while(x<15)
+		while(x<1)
 		{
-			ClientNioSocket cs = list.get(ThreadLocalRandom.current().nextInt(0 , 4));
-			//ClientNioSocket cs = list.get(0);
+			//ClientNioSocket cs = list.get(ThreadLocalRandom.current().nextInt(0 , 4));
+			ClientNioSocket cs = list.get(0);
 			//System.out.println(cs.write("Hello from " + cs.getId()));
-			BeanstalkQueue queue = new BeanstalkQueue(cs.getSocket());
-			queue.put("Go Fetch Data", 1, null);
+			System.out.println("Still Connected:" + cs.getSocket().isConnected());
+			//BeanstalkQueue queue = new BeanstalkQueue(cs.getSocket());
+			//queue.put("Go Fetch Data", 1, null);
+			BeanstalkSocket bSocket = new BeanstalkSocket(cs.getSocket());
+			bSocket.put("Go Fetch Data", 1, null);
 			x++;
 			//Thread.currentThread().sleep(1000);
 		}
