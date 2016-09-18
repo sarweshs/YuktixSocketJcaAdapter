@@ -38,8 +38,9 @@ public class YuktixManagedConnection implements javax.resource.spi.ManagedConnec
         this.mcf = mcf;
         this.logWriter = null;
         this.listeners = new ArrayList<>(1);
-        this.connection = null;
-        LOG.debug(String.format("Created new managed beanstalkd connection to %s:%s", mcf.getHostname(), mcf.getPort()));
+        //this.connection = null;
+        this.connection = new YuktixSocketConnectionImpl(this, mcf);
+        LOG.info(String.format("Created new managed YuktixSocket connection to %s:%s", mcf.getHostname(), mcf.getPort()));
     }
 
     /**
@@ -51,8 +52,18 @@ public class YuktixManagedConnection implements javax.resource.spi.ManagedConnec
      */
     @Override
     public Object getConnection(Subject subject, ConnectionRequestInfo cxRequestInfo) throws ResourceException {
-        LOG.debug(String.format("Connecting to %s:%s", mcf.getHostname(), mcf.getPort()));
-        connection = new YuktixSocketConnectionImpl(this, mcf);
+        LOG.info(String.format("Connecting to %s:%s", mcf.getHostname(), mcf.getPort()));
+        //connection = new YuktixSocketConnectionImpl(this, mcf);
+        if(connection != null)
+        {
+        	LOG.info("Connection not null");
+        	//if(connection.)
+        }
+        else
+        {
+        	LOG.info("*******************Connection became null so creating a new.");
+        	connection = new YuktixSocketConnectionImpl(this, mcf);
+        }
         return connection;
     }
 

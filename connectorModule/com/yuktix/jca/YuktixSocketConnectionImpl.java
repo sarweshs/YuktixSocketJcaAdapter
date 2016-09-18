@@ -58,6 +58,7 @@ public class YuktixSocketConnectionImpl implements YuktixSocketConnection {
         try {
             //super.close();
         	//this.socket.close();
+        	mc.closeHandle(this);
         	System.out.println("Returning to the pool:" + this.socket);
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
